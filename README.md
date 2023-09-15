@@ -11,8 +11,23 @@
 下面是一个打印helloworld程序，`main.cdx`
 
 ```c++
-@ 打印helloWrold
-do: std::io::print("hello Wrold!");
+$
+ HelloWorld程序
+ 非常的简单
+$
+
+@ 定义常量
+immutable order Str string = "HelloWorld";
+
+@ 主函数接口
+call: interface: [
+
+    @ 打印
+    do: println("{}", {Str});
+
+    @ 结束
+    done;
+]
 ```
 
 更多具体的介绍请看 `document` 文件夹
