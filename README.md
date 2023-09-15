@@ -8,7 +8,7 @@
 
 ## 示例代码
 
-下面是一个打印helloworld程序，`main.cdx`
+下面是一个打印helloworld的程序，`main.cdx`
 
 ```c++
 $
