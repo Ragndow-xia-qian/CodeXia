@@ -30,4 +30,4 @@ call: interface: [
 ]
 ```
 
-更多具体的介绍请看 `document` 文件夹
+更多具体的介绍请看 `document` 文件夹内的`语法.md`
