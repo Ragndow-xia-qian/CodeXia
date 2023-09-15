@@ -1,15 +1,29 @@
 #include "../include/ExpressionNode.h"
 #include <cmath>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <cctype>
 
-OperandNode::OperandNode(double val) : value(val) {}
+const std::unordered_map<std::string, int> ExpressionNode::precedence = {
+    {"^", 3},
+    {"*", 2},
+    {"/", 2},
+    {"%", 2},
+    {"+", 1},
+    {"-", 1},
+    {"(", 0},
+    {")", 0}};
 
-double OperandNode::evaluate() const
+ValueNode::ValueNode(double val) : value(val) {}
+
+double ValueNode::evaluate() const
 {
     return value;
 }
 
-OperatorNode::OperatorNode(const std::string &oper, std::unique_ptr<ExpressionNode> l, std::unique_ptr<ExpressionNode> r)
-    : op(oper), left(std::move(l)), right(std::move(r)) {}
+OperatorNode::OperatorNode(const std::string &oper, const std::shared_ptr<ExpressionNode> &l, const std::shared_ptr<ExpressionNode> &r)
+    : op(oper), left(l), right(r) {}
 
 double OperatorNode::evaluate() const
 {
@@ -34,35 +48,129 @@ double OperatorNode::evaluate() const
     }
     else if (op == "%")
     {
-        return fmod(leftVal, rightVal);
+        return std::fmod(leftVal, rightVal);
     }
-    else if (op == "^")
+    else if (op == "**")
     {
-        return pow(leftVal, rightVal);
+        return std::pow(leftVal, rightVal);
     }
 
     return 0;
 }
 
-int OperatorNode::getPrecedence() const
+std::shared_ptr<ExpressionNode> ExpressionNode::parse(
+    const std::string &expression)
 {
-    if (op == "+" || op == "-")
+    std::string expr = expression;
+
+    std::string nexpr;
+
+    int idx = 0;
+    while (isspace(expr[idx]))
     {
-        return 1;
-    }
-    else if (op == "*" || op == "/" || op == "%")
-    {
-        return 2;
-    }
-    else if (op == "^")
-    {
-        return 3;
+        idx++;
     }
 
-    return 0;
-}
+    if (expr[idx] == '-')
+    {
+        expr = '0' + expr;
+    }
 
-bool OperatorNode::hasHigherPrecedence(const OperatorNode &other) const
-{
-    return getPrecedence() > other.getPrecedence();
+    for (int i = 0; i < expr.length(); ++i)
+    {
+        nexpr += expr[i];
+        if (expr[i] == '+' ||
+            expr[i] == '-' ||
+            (expr[i] == '*' && expr[i + 1] != '*') ||
+            expr[i] == '/' ||
+            expr[i] == '%' ||
+            (std::isdigit(expr[i]) && !std::isdigit(expr[i + 1]))||
+            expr[i] == '(' ||
+            expr[i] == ')')
+        {
+            nexpr += ' ';
+        }
+    }
+    // std::cout << nexpr << std::endl;
+    std::istringstream iss(nexpr);
+    std::stack<std::shared_ptr<ExpressionNode>> nodeStack;
+    std::stack<std::string> opStack;
+    std::string token;
+
+    while (iss >> token)
+    {
+        if (std::isdigit(token[0]))
+        {
+            double value = std::stod(token);
+            nodeStack.push(std::make_shared<ValueNode>(value));
+        }
+        else if (token == "(")
+        {
+            opStack.push("(");
+        }
+        else if (token == ")")
+        {
+            while (!opStack.empty() && opStack.top() != "(")
+            {
+                std::string op = opStack.top();
+                opStack.pop();
+
+                std::shared_ptr<ExpressionNode> right = nodeStack.top();
+                nodeStack.pop();
+
+                std::shared_ptr<ExpressionNode> left = nodeStack.top();
+                nodeStack.pop();
+
+                nodeStack.push(std::make_shared<OperatorNode>(op, left, right));
+            }
+
+            opStack.pop(); // 弹出左括号
+        }
+        else
+        { // 运算符
+            while (!opStack.empty() && opStack.top() != "(" && precedence.at(token) <= precedence.at(opStack.top()))
+            {
+                std::string op = opStack.top();
+                opStack.pop();
+
+                std::shared_ptr<ExpressionNode> right = nodeStack.top();
+                nodeStack.pop();
+
+                std::shared_ptr<ExpressionNode> left = nodeStack.top();
+                nodeStack.pop();
+
+                nodeStack.push(std::make_shared<OperatorNode>(op, left, right));
+            }
+
+            opStack.push(token);
+        }
+    }
+
+    while (!opStack.empty())
+    {
+        std::string op = opStack.top();
+        opStack.pop();
+
+        if (nodeStack.empty())
+        {
+            throw "error";
+        }
+        std::shared_ptr<ExpressionNode> right = nodeStack.top();
+        nodeStack.pop();
+
+        if (nodeStack.empty())
+        {
+            throw "error";
+        }
+        std::shared_ptr<ExpressionNode> left = nodeStack.top();
+        nodeStack.pop();
+
+        nodeStack.push(std::make_shared<OperatorNode>(op, left, right));
+    }
+
+    if (nodeStack.empty())
+    {
+        return nullptr;
+    }
+    return nodeStack.top();
 }

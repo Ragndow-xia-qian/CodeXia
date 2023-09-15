@@ -1,22 +1,30 @@
-#include <memory>
-#include <string>
+#ifndef EXPRESSIONNODE_H
+#define EXPRESSIONNODE_H
 
-#ifndef EXPRESSIONTREEEVALUATOR_H
-#define EXPRESSIONTREEEVALUATOR_H
+#include <memory>
+#include <stack>
+#include <string>
+#include <unordered_map>
 
 class ExpressionNode
 {
 public:
+    virtual ~ExpressionNode() = default;
+
     virtual double evaluate() const = 0;
+    static std::shared_ptr<ExpressionNode> parse(const std::string &expression);
+
+private:
+    static const std::unordered_map<std::string, int> precedence;
 };
 
-class OperandNode : public ExpressionNode
+class ValueNode : public ExpressionNode
 {
 private:
     double value;
 
 public:
-    OperandNode(double val);
+    explicit ValueNode(double val);
 
     double evaluate() const override;
 };
@@ -25,17 +33,13 @@ class OperatorNode : public ExpressionNode
 {
 private:
     std::string op;
-    std::unique_ptr<ExpressionNode> left;
-    std::unique_ptr<ExpressionNode> right;
+    std::shared_ptr<ExpressionNode> left;
+    std::shared_ptr<ExpressionNode> right;
 
 public:
-    OperatorNode(const std::string &oper, std::unique_ptr<ExpressionNode> l, std::unique_ptr<ExpressionNode> r);
+    OperatorNode(const std::string &oper, const std::shared_ptr<ExpressionNode> &l, const std::shared_ptr<ExpressionNode> &r);
 
     double evaluate() const override;
-
-    int getPrecedence() const;
-
-    bool hasHigherPrecedence(const OperatorNode &other) const;
 };
 
-#endif // EXPRESSIONTREEEVALUATOR_H
+#endif // EXPRESSIONNODE_H
