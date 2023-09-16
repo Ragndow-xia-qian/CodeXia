@@ -10,7 +10,7 @@
 
 下面是一个打印helloworld的程序，`main.cdx`
 
-```c++
+```markdown
 $
  HelloWorld程序
  非常的简单
