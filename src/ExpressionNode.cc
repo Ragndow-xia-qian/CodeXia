@@ -6,7 +6,7 @@
 #include <cctype>
 
 const std::unordered_map<std::string, int> ExpressionNode::precedence = {
-    {"^", 3},
+    {"**", 3},
     {"*", 2},
     {"/", 2},
     {"%", 2},
