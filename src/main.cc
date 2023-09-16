@@ -59,7 +59,7 @@ auto main(int argc, char *argv[]) -> int
     ifstream in(argv[1]);
     if (!in.is_open())
     {
-        cerr << "Cannot open file" << endl;
+        std::perror("Error opening input file");
         return -1;
     }
 
