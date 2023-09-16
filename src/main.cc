@@ -34,13 +34,15 @@ auto main(int argc, char *argv[]) -> int
                 cout << "Please Enter 'exit()' to exit" << endl;
                 continue;
             }
-            if (expr.empty()) {
+            if (expr.empty())
+            {
                 continue;
             }
             try
             {
                 shared_ptr<ExpressionNode> expression = ExpressionNode::parse(expr);
-                if (!expression) {
+                if (!expression)
+                {
                     continue;
                 }
                 cout << expression->evaluate() << endl;

@@ -84,7 +84,7 @@ std::shared_ptr<ExpressionNode> ExpressionNode::parse(
             (expr[i] == '*' && expr[i + 1] != '*') ||
             expr[i] == '/' ||
             expr[i] == '%' ||
-            (std::isdigit(expr[i]) && !std::isdigit(expr[i + 1]))||
+            (std::isdigit(expr[i]) && !std::isdigit(expr[i + 1])) ||
             expr[i] == '(' ||
             expr[i] == ')')
         {
