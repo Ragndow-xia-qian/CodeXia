@@ -37,7 +37,7 @@ private:
     std::shared_ptr<ExpressionNode> right;
 
 public:
-    OperatorNode(const std::string &oper, const std::shared_ptr<ExpressionNode> &l, const std::shared_ptr<ExpressionNode> &r);
+    OperatorNode(std::string oper, const std::shared_ptr<ExpressionNode> &l, const std::shared_ptr<ExpressionNode> &r);
 
     double evaluate() const override;
 };

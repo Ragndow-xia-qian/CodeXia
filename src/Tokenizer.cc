@@ -48,11 +48,11 @@ std::vector<std::string> Tokenizer::tokenizeFile(std::ifstream &in)
 
     // std::cout << code << std::endl;
 
-    remove_const_t<decltype(string::npos)> idx = code.find("\n");
+    remove_const_t<decltype(string::npos)> idx = code.find('\n');
     while (idx != string::npos)
     {
         code.replace(idx, 1, " ");
-        idx = code.find("\n", idx + 1);
+        idx = code.find('\n', idx + 1);
     }
 
     for (size_t i = 1; i < code.size(); ++i)
@@ -75,7 +75,6 @@ std::vector<std::string> Tokenizer::tokenizeFile(std::ifstream &in)
 std::vector<std::vector<std::string>> Tokenizer::groupTokensByLine(
     const std::vector<std::string> &tokens)
 {
-    using std::move;
     using std::string;
     using std::vector;
 
@@ -87,7 +86,7 @@ std::vector<std::vector<std::string>> Tokenizer::groupTokensByLine(
         lines.push_back(token);
         if (token.back() == ';' || token.back() == '[' || token.back() == ']')
         {
-            lineTokens.emplace_back(move(lines));
+            lineTokens.emplace_back(std::move(lines));
             lines.clear();
         }
     }

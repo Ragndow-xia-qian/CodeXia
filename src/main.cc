@@ -1,6 +1,5 @@
 #include <iostream>
 #include <memory>
-#include <fstream>
 #include <vector>
 #include <string>
 #include "../include/Tokenizer.h"
@@ -47,10 +46,9 @@ auto main(int argc, char *argv[]) -> int
                 }
                 cout << expression->evaluate() << endl;
             }
-            catch (const char *e)
+            catch (const exception &e)
             {
                 cerr << "This isn't a expression!" << endl;
-                cerr << e << endl;
             }
         }
         return 0;

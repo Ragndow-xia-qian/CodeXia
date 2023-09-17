@@ -2,8 +2,8 @@
 #include <cmath>
 #include <sstream>
 #include <string>
-#include <algorithm>
 #include <cctype>
+#include <utility>
 
 const std::unordered_map<std::string, int> ExpressionNode::precedence = {
     {"**", 3},
@@ -22,8 +22,8 @@ double ValueNode::evaluate() const
     return value;
 }
 
-OperatorNode::OperatorNode(const std::string &oper, const std::shared_ptr<ExpressionNode> &l, const std::shared_ptr<ExpressionNode> &r)
-    : op(oper), left(l), right(r) {}
+OperatorNode::OperatorNode(std::string oper, const std::shared_ptr<ExpressionNode> &l, const std::shared_ptr<ExpressionNode> &r)
+    : op(std::move(oper)), left(l), right(r) {}
 
 double OperatorNode::evaluate() const
 {
@@ -106,7 +106,7 @@ std::shared_ptr<ExpressionNode> ExpressionNode::parse(
         }
         else if (token == "(")
         {
-            opStack.push("(");
+            opStack.emplace("(");
         }
         else if (token == ")")
         {
@@ -153,14 +153,14 @@ std::shared_ptr<ExpressionNode> ExpressionNode::parse(
 
         if (nodeStack.empty())
         {
-            throw "error";
+            throw std::runtime_error("error");
         }
         std::shared_ptr<ExpressionNode> right = nodeStack.top();
         nodeStack.pop();
 
         if (nodeStack.empty())
         {
-            throw "error";
+            throw std::runtime_error("error");
         }
         std::shared_ptr<ExpressionNode> left = nodeStack.top();
         nodeStack.pop();
