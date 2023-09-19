@@ -2,10 +2,9 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <fstream>
 #include "../include/Tokenizer.h"
 #include "../include/ExpressionNode.h"
-#include "../src/Tokenizer.cc"
-#include "../src/ExpressionNode.cc"
 
 auto main(int argc, char *argv[]) -> int
 {
@@ -16,7 +15,6 @@ auto main(int argc, char *argv[]) -> int
     using std::exception;
     using std::getline;
     using std::ifstream;
-    using std::remove_if;
     using std::shared_ptr;
     using std::string;
     using std::vector;
@@ -46,7 +44,7 @@ auto main(int argc, char *argv[]) -> int
                 }
                 cout << expression->evaluate() << endl;
             }
-            catch (const exception &e)
+            catch (const exception &)
             {
                 cerr << "This isn't a expression!" << endl;
             }
