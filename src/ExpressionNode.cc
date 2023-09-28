@@ -1,4 +1,4 @@
-#include "../include/ExpressionNode.h"
+#include "ExpressionNode.h"
 #include <cmath>
 #include <sstream>
 #include <string>

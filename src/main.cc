@@ -3,8 +3,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "../include/Tokenizer.h"
-#include "../include/ExpressionNode.h"
+#include "Tokenizer.h"
+#include "ExpressionNode.h"
 
 auto main(int argc, char *argv[]) -> int
 {
