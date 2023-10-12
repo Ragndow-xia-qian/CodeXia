@@ -44,7 +44,7 @@ auto main(int argc, char *argv[]) -> int
                 }
                 cout << expression->evaluate() << endl;
             }
-            catch (const exception &)
+            catch (...)
             {
                 cerr << "This isn't a expression!" << endl;
             }
