@@ -11,7 +11,7 @@ class ExpressionNode
 public:
     virtual ~ExpressionNode() = default;
 
-    virtual double evaluate() const = 0;
+    [[nodiscard]] virtual double evaluate() const = 0;
     static std::shared_ptr<ExpressionNode> parse(const std::string &expression);
 
 private:
@@ -26,7 +26,7 @@ private:
 public:
     explicit ValueNode(double val);
 
-    double evaluate() const override;
+    [[nodiscard]] double evaluate() const override;
 };
 
 class OperatorNode : public ExpressionNode
@@ -39,7 +39,7 @@ private:
 public:
     OperatorNode(std::string oper, const std::shared_ptr<ExpressionNode> &l, const std::shared_ptr<ExpressionNode> &r);
 
-    double evaluate() const override;
+    [[nodiscard]] double evaluate() const override;
 };
 
 #endif // EXPRESSIONNODE_H

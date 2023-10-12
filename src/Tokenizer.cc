@@ -3,7 +3,6 @@
 #include <sstream>
 #include <iterator>
 #include <algorithm>
-#include <unordered_map>
 #include "Tokenizer.h"
 
 std::vector<std::string> Tokenizer::tokenizeFile(std::ifstream &in)
@@ -106,8 +105,4 @@ void Tokenizer::printTokens(const std::vector<std::vector<std::string>> &tokens)
         }
         cout << endl;
     }
-}
-
-__attribute__((unused)) std::vector<std::string> Tokenizer::tokenizeFile(std::istream &in) {
-    return {};
 }
